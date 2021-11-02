@@ -1,0 +1,9 @@
+DROP DATABASE IF EXISTS graduate;
+CREATE DATABASE IF NOT EXISTS graduate;
+USE graduate;
+
+CREATE TABLE example(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name CHAR(25) UNIQUE,
+    value CHAR(25) NOT NULL
+)engine=InnoDB;
