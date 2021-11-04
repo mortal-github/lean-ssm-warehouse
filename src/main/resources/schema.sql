@@ -31,8 +31,9 @@ CREATE TABLE Detail(
 CREATE TABLE Warehouse(
     id INT PRIMARY KEY  AUTO_INCREMENT,
     status ENUM('create', 'available', 'work', 'suspend') NOT NULL DEFAULT 'create',
-    description CHAR(125) NULL,
+    name CHAR(125) NOT NULL,
     address CHAR(125) NOT NULL,
+    description CHAR(125) NULL,
     length INT NULL,
     width INT NULL,
     height INT NULL,
