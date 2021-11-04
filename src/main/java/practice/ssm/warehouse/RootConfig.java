@@ -2,6 +2,7 @@ package practice.ssm.warehouse;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.mybatis.spring.annotation.MapperScan;
 import practice.ssm.warehouse.mapper.ExampleMapper;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -23,6 +24,7 @@ import javax.sql.DataSource;
         @ComponentScan.Filter(type = FilterType.REGEX, pattern = "learn.gdut.graduate.warehouse.controller.*")
     }
 )
+@MapperScan("practice.ssm.warehouse.mapper")
 public class RootConfig {
 
     @Bean
@@ -71,9 +73,9 @@ public class RootConfig {
     public SqlSession sqlSession(SqlSessionFactory sqlSessionFactory){
         return new SqlSessionTemplate(sqlSessionFactory);
     }
-    @Bean
-    public ExampleMapper exampleMapper(SqlSession sqlSession){
-        //sqlSessionFactory.getConfiguration().addMapper(ExampleMapper.class);//java配置sql，需要注册sql,故需要注册class。
-        return sqlSession.getMapper(ExampleMapper.class);
-    }
+//    @Bean
+//    public ExampleMapper exampleMapper(SqlSession sqlSession){
+//        //sqlSessionFactory.getConfiguration().addMapper(ExampleMapper.class);//java配置sql，需要注册sql,故需要注册class。
+//        return sqlSession.getMapper(ExampleMapper.class);
+//    }
 }
