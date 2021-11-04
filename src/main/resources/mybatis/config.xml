@@ -8,6 +8,8 @@
 
     <typeAliases>
         <typeAlias alias="Example" type="practice.ssm.warehouse.pojo.Example"/>
+        <typeAlias alias="GoodsType" type="practice.ssm.warehouse.pojo.GoodsType"/>
+        <typeAlias alias="Detail" type="practice.ssm.warehouse.pojo.Detail"/>
     </typeAliases>
 
 <!--    Mybatis-Spring 配置 会忽略 environments xml配置-->
@@ -25,5 +27,7 @@
 
     <mappers>
         <mapper resource="/mybatis/ExampleMapper.xml"/>
+        <mapper resource="/mybatis/GoodsTypeMapper.xml"/>
+<!--        <mapper resource="/mybatis/WarehouseMapper.xml"/>-->
     </mappers>
 </configuration>

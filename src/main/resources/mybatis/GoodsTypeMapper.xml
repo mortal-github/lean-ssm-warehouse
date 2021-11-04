@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="practice.ssm.warehouse.mapper.GoodsTypeMapper">
+    <resultMap id="GoodsTypeResult" type="GoodsType">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="length" column="length"/>
+        <result property="width" column="width"/>
+        <result property="height" column="height"/>
+        <collection property="details" ofType="Detail">
+            <result property="name" column="dname"/>
+            <result property="value" column="dvalue"/>
+        </collection>
+    </resultMap>
+    <select id="getSome" resultMap="GoodsTypeResult">
+        SELECT id, g1.name name , description, length, width, height, d1.name as dname , d1.value as dvalue
+        FROM GoodsType g1 inner join Detail d1 on  g1.id = d1.goods_type
+        <where>
+            <if test="name != null">
+                g1.name = #{name}
+            </if>
+            <if test="description != null">
+                AND description = #{description}
+            </if>
+            <if test="details != null ">
+                AND ${details.size} =
+                    (SELECT COUNT(*) FROM Detail d2
+                    WHERE g1.id = d2.goods_type AND
+                    <foreach collection="details" item="item"  open="(" close=")" separator="OR">
+                        (d2.name = #{item.name} AND d2.value = #{item.value})
+                    </foreach>
+                    )
+            </if>
+        </where>
+    </select>
+
+    <select id="get" resultMap="GoodsTypeResult">
+        SELECT id, g1.name name , description, length, width, height, d1.name as dname , d1.value as dvalue
+        FROM GoodsType g1 inner join Detail d1 on  g1.id = d1.goods_type
+        WHERE g1.id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        GoodsType(name, description,length, width, height)
+        VALUES (#{name}, #{description}, #{length}, #{width}, #{height})
+    </insert>
+
+    <insert id="update">
+        UPDATE
+        GoodsType
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="length != null">length = #{length},</if>
+            <if test="width != null">width = #{width},</if>
+            <if test="height != null">height = #{height},</if>
+        </set>
+        WHERE GoodsType.id = #{id}
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM GoodsType
+        WHERE GoodsType.id = #{id}
+    </delete>
+
+<!--    <select id="getDetail">-->
+<!--        SELECT name, value-->
+<!--        FROM Detail-->
+<!--        WHERE Detail.goods_type = #{id}-->
+<!--          AND-->
+<!--        <foreach collection="details" item="item" separator="OR" open="(" close=")">-->
+<!--            (Detail.name = #{item.name} AND Detail.value = #{item.value})-->
+<!--        </foreach>-->
+<!--    </select>-->
+    <insert id="insertDetail">
+        INSERT INTO
+        Detail(goods_type, name, value)
+        VALUES
+        <foreach collection="details" item="item" separator=",">
+            (#{goods_type}, #{item.name}, #{item.value})
+        </foreach>
+    </insert>
+    <delete id="deleteDetail">
+        DELETE FROM Detail
+        WHERE Detail.goods_type = #{goods_type}
+        AND
+        <foreach collection="details" item="item"  open="(" close=")" separator="OR">
+            (Detail.name = #{item.name} AND Detail.value = #{item.value})
+        </foreach>
+    </delete>
+</mapper>
+
+<!--        CREATE TABLE GoodsType(-->
+<!--        id INT PRIMARY KEY AUTO_INCREMENT,-->
+<!--        name CHAR(125) NOT NULL UNIQUE ,-->
+<!--        description CHAR(125) NOT NULL,-->
+<!--        length INT NOT NULL,-->
+<!--        width INT NOT NULL,-->
+<!--        height INT NOT NULL-->
+<!--        );-->
+
+<!--        CREATE TABLE Detail(-->
+<!--        goods_type INT NOT NULL ,-->
+<!--        name CHAR(125) NOT NULL,-->
+<!--        value CHAR(125) NOT NULL,-->
+<!--        FOREIGN KEY (goods_type) REFERENCES  GoodsType(id)-->
+<!--        );-->
